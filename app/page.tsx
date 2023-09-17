@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { UserButton, auth } from "@clerk/nextjs";
+import { ArrowRightOnRectangleIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -32,7 +33,10 @@ export default async function Home() {
                 <h1>File upload components</h1>
               ): (
                 <Link href={"/sign-in"}>
-                <Button>Log In to Get Started</Button>
+                <Button>
+                  Log In to Get Started
+                  <ArrowRightOnRectangleIcon className="h-4 w-4 ml-2" />
+                </Button>
                 </Link>
 
               )
