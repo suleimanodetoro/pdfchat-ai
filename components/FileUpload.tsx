@@ -1,5 +1,6 @@
 "use client";
 
+import { uploadToS3 } from "@/lib/s3";
 import { InboxArrowDownIcon } from "@heroicons/react/20/solid";
 import React from "react";
 import { useDropzone } from "react-dropzone";
@@ -11,8 +12,25 @@ const FileUpload = () => {
     // maximum number of files
     maxFiles: 1,
     // Whenever a file is uploaded or dropped onto the website...
-    onDrop: (acceptedFile) => {
+    // make function async because we are using await
+    onDrop: async (acceptedFile) => {
         console.log(acceptedFile);
+        const file = acceptedFile[0];
+        // if file is bigger than 10MB, do not upload lmao
+        if (file.size > 10 * 1024 * 1024) {
+            alert('please upload a file 10MB or less');
+            return;
+        }
+        // if not greater than 10MB, upload to S3
+        try {
+            const data = await uploadToS3(file);
+            console.log('data ', data);
+            
+        } catch (error) {
+            console.log(error);
+            
+            
+        }
         
     }
   });
