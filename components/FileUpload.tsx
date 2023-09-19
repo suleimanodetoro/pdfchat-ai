@@ -55,8 +55,10 @@ const FileUpload = () => {
         }
         // data has the structure of {file_name, file_key} so its all good to pass like this
         mutate(data, {
-          onSuccess: (data) => {
-            toast.success(data.message);
+          onSuccess: (data: { message: any; }) => {
+            // toast.success(data.message);
+            console.log(data);
+            
           },
           onError() {
             toast.error("Error creating chat in server");
