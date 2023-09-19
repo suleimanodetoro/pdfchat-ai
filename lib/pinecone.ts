@@ -8,6 +8,7 @@ import { downloadFromS3 } from "./s3-server";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { getEmbeddings } from "./embeddings";
 import md5 from "md5";
+import { convertToAscii } from "./utils";
 
 type PDFPage = {
   pageContent: string;
@@ -48,10 +49,14 @@ export async function loadS3IntoPinecone(fileKey: string) {
   const client = await getPineconeClient();
   //   get pinecone index which is the name of the database. check your profile
   const pineconeIndex = client.Index("pdfchat-ai");
-  console.log('inserting vectors into pinecone');
-  
+  console.log("inserting vectors into pinecone");
+  //   when creating namespaces, at least as of today, you apparently need to ASCII
+  const namespace = pineconeIndex.namespace(convertToAscii(fileKey));
 
-  return pages;
+  console.log("inserting vectors into pinecone");
+  await namespace.upsert(vectors);
+
+  return documents[0];
 }
 // function to embed documents. We will use open ai to get the embeddings of a single string (see: lib/embeddings.ts).
 async function embedDocument(doc: Document) {
