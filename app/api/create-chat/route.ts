@@ -3,11 +3,15 @@ import { NextResponse } from "next/server";
 // We will be installing tanstack/react-query library. It makes it easy ot handle queries from local to server endpoints
 
 export async function POST(req: Request,res: Response) {
-    const body = await req.json();
-    const {file_key, file_name} = body;
+
     try {
-        NextResponse
-    } catch (error) {
+        const body = await req.json();
+        const {file_key, file_name} = body; 
+        console.log(file_key,file_name);
+        return NextResponse.json({message:"success"})
+          
+    } 
+    catch (error) {
         return NextResponse.json({error:"internal server error"},{status: 500});
         
     }
