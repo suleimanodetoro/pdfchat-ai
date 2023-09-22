@@ -7,10 +7,11 @@ import React, { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import toast from "react-hot-toast";
-
+import { useRouter } from "next/navigation";
 
 const FileUpload = () => {
-    const [uploading, setUploading] = useState<boolean>(false);
+  const router = useRouter();
+  const [uploading, setUploading] = useState<boolean>(false);
   // mutation to create a chat room
   const { mutate, isLoading } = useMutation({
     // will take a mutation function
@@ -55,18 +56,20 @@ const FileUpload = () => {
         }
         // data has the structure of {file_name, file_key} so its all good to pass like this
         mutate(data, {
-          onSuccess: (data: { message: any; }) => {
-            // toast.success(data.message);
-            console.log(data);
-            
+          onSuccess: ({ chat_id }) => {
+            // on success, the mutation will have access to chat_id we returned in route code
+            toast.success("Chat has been created");
+            // redirect to chat page with chat id
+            router.push(`/chat/${chat_id}`);
           },
-          onError() {
+          onError(error) {
             toast.error("Error creating chat in server");
+            console.log(error);
           },
         });
       } catch (error) {
         console.log(error);
-      } finally{
+      } finally {
         setUploading(false);
       }
     },
@@ -82,9 +85,9 @@ const FileUpload = () => {
       >
         <input {...getInputProps()} />
         {/* If mutate function is in loading state, show animation */}
-        {(isLoading || uploading) ? (
+        {isLoading || uploading ? (
           <>
-          {/* Loading state */}
+            {/* Loading state */}
             <ArrowPathIcon className="w-10 h-10 text-blue-500 animate-spin" />
             <p className="mt-2 text-sm text-slate-400">Spilling tea to GPT</p>
           </>

@@ -3,27 +3,23 @@
 
 import { Configuration, OpenAIApi } from "openai-edge";
 const configuration = new Configuration({
-    apiKey: process.env.OPEN_AI_KEY
+  apiKey: process.env.OPEN_AI_KEY,
 });
 
 const openai = new OpenAIApi(configuration);
 
 // Helper function to convert text to vector
-export async function getEmbeddings (text: string) {
-    try {
-        const response = await openai.createEmbedding({
-            model:"text-embedding-ada-002",
-            input: text.replace(/\n/g, " ")
-        });
-        const result = await response.json();
-        // this embedding is basically a vector 
-        return result.data[0].embedding as number[]
-        
-    } catch (error) {
-        console.log('error calling open ai embedding', error);
-        throw error;
-        
-        
-    }
-
+export async function getEmbeddings(text: string) {
+  try {
+    const response = await openai.createEmbedding({
+      model: "text-embedding-ada-002",
+      input: text.replace(/\n/g, " "),
+    });
+    const result = await response.json();
+    // this embedding is basically a vector
+    return result.data[0].embedding as number[];
+  } catch (error) {
+    console.log("error calling openai embeddings api", error);
+    throw error;
+  }
 }
